@@ -22,10 +22,4 @@ export class AppConfigService {
     get appEnv(): string {
         return this.configService.get<string>('app.appEnv');
     }
-    get appClientHost(): string {
-        return this.configService.get<string>('app.appClientHost');
-    }
-    get appTranscoderApi(): string {
-        return this.configService.get<string>('app.appTranscoderApi');
-    }
 }
