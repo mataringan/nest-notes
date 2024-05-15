@@ -33,7 +33,7 @@ export class AuthenticationService {
     if(!user){
       throw new UnauthorizedException('Invalid credentials');
     }
-    const accessToken = this.jwtService.sign({ email: user.email, sub: user.id });
+    const accessToken = this.jwtService.sign({ email: user.email, name: user.name });
     return {
       accessToken
     }

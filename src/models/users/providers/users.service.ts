@@ -24,8 +24,8 @@ export class UsersService {
     return  await  this.userRepository.save(model)
   }
 
-  findAll(options: IExtendPaginationOptions): Promise<Pagination<User>>{
-    const {sortBy, search} = options
+  findAll(options: IExtendPaginationOptions): Promise<Pagination<User>| User[]>{
+    const {sortBy, search, paginateDisable} = options
 
     let qb = this.userRepository.createQueryBuilder('users')
 
@@ -37,6 +37,10 @@ export class UsersService {
       qb.where(('name ilike :search OR email ilike :search'), {
         search: `%${search}%`
       })
+    }
+
+    if(paginateDisable){
+      return qb.getMany()
     }
 
     return paginate<User>(qb, options)
@@ -60,6 +64,15 @@ export class UsersService {
     })
 
     return user
+  }
+
+  async getProfile(id: string): Promise<any>{
+    const user = await this.findOne(id)
+
+    return {
+      name: user.name,
+      email: user.email
+    }
   }
 
   async update(id:string, updateUserDto: UpdateUserDto): Promise<User>{
