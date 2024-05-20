@@ -4,6 +4,8 @@ import { DatabasePostgresConfigModule } from "./config/database/postgres/config.
 import { PostgresDatabaseProviderModule } from "./providers/database/postgres/provider.module";
 import { UsersModule } from "./models/users/users.module";
 import { AuthenticationModule } from './authentication/authentication.module';
+import { APP_GUARD } from "@nestjs/core";
+import { RoleGuard } from "./common/guards/role.guard";
 
 
 @Module({
@@ -11,13 +13,21 @@ import { AuthenticationModule } from './authentication/authentication.module';
     // Config
     AppConfigModule,
     DatabasePostgresConfigModule,
+
     // Providers
     PostgresDatabaseProviderModule,
 
+    // Authentication
+    AuthenticationModule,
+
     // Models
     UsersModule,
-
-    AuthenticationModule
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    }
   ]
 })
 export class AppModule {}

@@ -8,6 +8,7 @@ import { QuerySortingHelper } from "../../../common/helpers/query-sorting.helper
 import { SORTING_COLUMNS_USER } from "../constants/sorting-columns.constant";
 import { paginate, Pagination } from "nestjs-typeorm-paginate";
 import { UpdateUserDto } from "../dto/update-user.dto";
+import { FilterUserDto } from "../dto/filter-user.dto";
 
 
 @Injectable()
@@ -21,16 +22,24 @@ export class UsersService {
     const model = new User()
     this.userRepository.merge(model, createUserDto)
 
-    return  await  this.userRepository.save(model)
+    return await  this.userRepository.save(model)
   }
 
-  findAll(options: IExtendPaginationOptions): Promise<Pagination<User>| User[]>{
+  findAll(options: IExtendPaginationOptions, filter: FilterUserDto): Promise<Pagination<User>| User[]>{
     const {sortBy, search, paginateDisable} = options
 
     let qb = this.userRepository.createQueryBuilder('users')
 
+    qb.select(['users.id', 'users.name', 'users.email', 'users.role'])
+
     if(sortBy?.length){
       qb = QuerySortingHelper(qb, options.sortBy, SORTING_COLUMNS_USER)
+    }
+
+    if(filter.role){
+      qb.andWhere('users.role = :role', {
+        role: filter.role
+      })
     }
 
     if(search){
@@ -78,20 +87,30 @@ export class UsersService {
   async update(id:string, updateUserDto: UpdateUserDto): Promise<User>{
     const user: User = await this.findOne(id)
 
+    if(!user){
+      throw new NotFoundException('User not found')
+    }
+
     const model = new User()
     this.userRepository.merge(model, {...user}, updateUserDto)
 
     return await this.userRepository.save(model)
   }
 
-  async remove(id: string): Promise<UpdateResult>{
+  async remove(id: string): Promise<User>{
     const user:User = await this.findOne(id)
 
-    return await this.userRepository.createQueryBuilder('user')
-      .softDelete()
-      .where('id = :id', {id: user.id})
-      .returning('*')
-      .execute()
+    if(!user){
+      throw new NotFoundException('User not found')
+    }
+
+    return await this.userRepository.softRemove(user)
+
+    // return await this.userRepository.createQueryBuilder('user')
+    //   .softDelete()
+    //   .where('id = :id', {id: user.id})
+    //   .returning('*')
+    //   .execute()
   }
 
 }

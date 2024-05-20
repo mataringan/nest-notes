@@ -17,7 +17,14 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:create": "npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
+    "migration:down": "ts-node ./node_modules/typeorm/cli.js migration:revert -d ./src/providers/database/postgres/provider.datasource.ts",
+    "migration:generate": "npm run typeorm migration:generate ./src/database/migrations/$npm_config_name -- --dataSource ./src/providers/database/postgres/provider.datasource.ts",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/providers/database/postgres/provider.datasource.ts",
+    "migration:up": "ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/providers/database/postgres/provider.datasource.ts",
+    "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/database/data-source.ts",
+    "typeorm": "ts-node ./node_modules/typeorm/cli"
   },
   "dependencies": {
     "@nestjs/class-transformer": "^0.4.0",

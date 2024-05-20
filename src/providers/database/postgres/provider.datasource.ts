@@ -1,10 +1,10 @@
-import * as dotenv from 'dotenv'
-import * as process from 'process'
-import { DataSource, DataSourceOptions } from "typeorm";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import { SeederOptions } from "typeorm-extension";
+import { DataSource, DataSourceOptions } from 'typeorm';
+import * as dotenv from 'dotenv';
+import * as process from 'process';
+import { SeederOptions } from 'typeorm-extension';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+dotenv.config();
 
-dotenv.config()
 export const providerDatasource = new DataSource({
   type: 'postgres',
   host: process.env.DATABASE_HOST,
@@ -15,8 +15,9 @@ export const providerDatasource = new DataSource({
   migrations: ['src/database/migrations/*.ts'],
   subscribers: [],
   factories: ['src/database/factories/**/*{.ts,.js}'],
+  entities: [__dirname + '/../../../models/**/entities/*.entity{.ts,.js}'],
   seeds: ['src/database/seeders/**/*{.ts,.js}'],
-  synchronize: false,
+  synchronize: true,
   logging: process.env.dbLogging === 'true',
   namingStrategy: new SnakeNamingStrategy(),
 } as DataSourceOptions & SeederOptions);

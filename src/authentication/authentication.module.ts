@@ -8,7 +8,7 @@ import { JwtConfigModule } from "../config/jwt/config.module";
 import { JwtConfigService } from "../config/jwt/config.services";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
-import { TypeOrmModule } from "@nestjs/typeorm";
+
 
 @Module({
   imports: [

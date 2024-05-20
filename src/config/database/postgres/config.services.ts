@@ -27,9 +27,6 @@ export class DatabasePostgresConfigService {
     get dbSync(): string {
         return this.configService.get<string>('databasePostgres.dbSync');
     }
-    get dbSchema(): string {
-        return this.configService.get<string>('databasePostgres.dbSchema');
-    }
     get dbLogging(): string {
         return this.configService.get<string>('databasePostgres.dbLogging');
     }
