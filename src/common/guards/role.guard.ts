@@ -22,7 +22,6 @@ export class RoleGuard implements CanActivate {
     const payload = JSON.parse(decodedPayload);
 
     const userRole = payload.role;
-    console.log('pppp', payload.role)
 
     if (roles.includes(userRole)) {
       return true;

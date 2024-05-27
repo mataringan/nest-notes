@@ -6,6 +6,7 @@ import { UsersModule } from "./models/users/users.module";
 import { AuthenticationModule } from './authentication/authentication.module';
 import { APP_GUARD } from "@nestjs/core";
 import { RoleGuard } from "./common/guards/role.guard";
+import { AuditLogsModule } from "./models/audit-logs/audit-logs.module";
 
 
 @Module({
@@ -21,6 +22,7 @@ import { RoleGuard } from "./common/guards/role.guard";
     AuthenticationModule,
 
     // Models
+    AuditLogsModule,
     UsersModule,
   ],
   providers: [

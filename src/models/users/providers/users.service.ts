@@ -9,6 +9,7 @@ import { SORTING_COLUMNS_USER } from "../constants/sorting-columns.constant";
 import { paginate, Pagination } from "nestjs-typeorm-paginate";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { FilterUserDto } from "../dto/filter-user.dto";
+import { Request } from "express";
 
 
 @Injectable()
@@ -84,17 +85,18 @@ export class UsersService {
     }
   }
 
-  async update(id:string, updateUserDto: UpdateUserDto): Promise<User>{
-    const user: User = await this.findOne(id)
+  async update(id:string, updateUserDto: UpdateUserDto, req: Request): Promise<User>{
+    const dataUser: User = await this.findOne(id)
 
-    if(!user){
+
+    if(!dataUser){
       throw new NotFoundException('User not found')
     }
 
     const model = new User()
-    this.userRepository.merge(model, {...user}, updateUserDto)
+    this.userRepository.merge(model, {...dataUser}, updateUserDto)
 
-    return await this.userRepository.save(model)
+    return await this.userRepository.save(model, {data: {user: req.user}})
   }
 
   async remove(id: string): Promise<User>{

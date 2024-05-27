@@ -47,18 +47,21 @@ export class UsersController{
   @Put('/update/me')
   @ApiBaseResponse(User)
   update(@Req() req, @Body() payload: UpdateUserDto){
-    return this.usersService.update(req.user.id, payload)
+    return this.usersService.update(req.user.id, payload, req)
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Update user by id',
   })
   @Put(':id')
   @ApiBaseResponse(User)
   updateById(
+    @Req() req,
     @Param('id') id: string,
     @Body() payload: UpdateUserDto){
-    return this.usersService.update(id, payload)
+    return this.usersService.update(id, payload, req)
   }
 
 
